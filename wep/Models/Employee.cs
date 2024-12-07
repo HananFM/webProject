@@ -18,7 +18,7 @@ namespace wep.Models
         [Required]
         [MaxLength(30)]
         [Display(Name = "Çalışan Uzmanlık Alanı")]
-        public int EmployeeExperience { get; set; }
+        public string EmployeeExperience { get; set; }
         [Required]
         [Display(Name = "Çalışma saatleri")]
         public int workingHours{ get; set; }
