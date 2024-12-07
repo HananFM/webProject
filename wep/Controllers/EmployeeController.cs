@@ -26,7 +26,10 @@ namespace wep.Controllers
                 return RedirectToAction("Index");
             }
             TempData["msj"] = "Lütfen Dataları düzgün giriniz";
-            return RedirectToAction("YazarEkle");
+            return RedirectToAction("EmployeeEkle");
         }
+
+    
+
     }
 }
