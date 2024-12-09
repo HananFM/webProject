@@ -13,7 +13,7 @@ namespace wep.Controllers
         public async Task<IActionResult> Index()
         {
             var Context = _context.servis.Include(s => s.employee);
-            return View(await ServisContext.ToListAsync());
+            return View(await Context.ToListAsync());
         }
 
         // GET: Kitaps/Details/5

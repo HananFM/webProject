@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Xml.Linq;
 
 namespace wep.Models
@@ -12,10 +13,9 @@ namespace wep.Models
         [Display(Name = "Servis Adı ")]
         public string ServisName { get; set; }
 
-        [Required]
         [Display(Name = "Servis Ücreti")]
         [Range(0, int.MaxValue, ErrorMessage = "Please enter a value bigger than {0}")]
-        public string ServisFee { get; set; }
+        public int ServisFee { get; set; }
 
         public int EmployeeID { get; set; }
         public Employee employee { get; set; }

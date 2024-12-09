@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Xml.Linq;
 
 namespace wep.Models
@@ -22,6 +23,9 @@ namespace wep.Models
         [Required]
         [Display(Name = "Çalışma saatleri")]
         public int workingHours{ get; set; }
+
+        public ICollection<Servis>? servis { get; set; }
+
 
     }
 }

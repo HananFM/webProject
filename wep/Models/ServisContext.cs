@@ -7,10 +7,6 @@ namespace wep.Models
         public DbSet<Servis> servis { get; set; }
         public DbSet<Employee> employee { get; set; }
 
-        internal static Task<string?> ToListAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
