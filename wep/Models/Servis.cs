@@ -19,6 +19,5 @@ namespace wep.Models
 
         public int EmployeeID { get; set; }
         public Employee employee { get; set; }
-
     }
 }

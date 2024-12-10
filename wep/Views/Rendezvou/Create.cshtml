@@ -1,0 +1,66 @@
+﻿@model wep.Models.Rendezvou
+
+@{
+	ViewData["Title"] = "RendezvouCreate";
+}
+
+<h1>RendezvouCreate</h1>
+
+<h4>Rendezvou</h4>
+<hr />
+<div class="row">
+	<div class="col-md-8">
+		<form asp-action="RendezvouCreate">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			@{
+				var services = new ServisContext().servis;
+				if (services != null && services.Count() > 0)
+				{
+					<div class="form-group">
+						<label asp-for="RandezvouTime" class="col-form"></label>
+						<input asp-for="RandezvouTime" class="form-control" type="date" required />
+						<span asp-validation-for="RandezvouTime" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label for="servis">Select a servis:</label>
+						<select id="services" name="services">
+							@foreach (var s in services)
+							{
+								<option value="@s.ServisID">@s.ServisName</option>
+							}
+						</select>
+					</div>
+					<label for="servis">Select a Time:</label>
+					<div class="form-check form-check-inline">
+						@foreach (var time in wep.Models.Rendezvou.timing)
+						{
+							<div class="form-check-inline" style="margin-right:30px;">
+								<input class="form-check-input" type="radio" id="@time" name="SelectedOption" value="@time" required />
+								<label class="form-check-label" for="@time">@time</label>
+							</div>
+						}
+					</div>
+				}
+				else
+				{
+					<div class="form-group">
+						<label class="control-label">Sorry, No Sevices are avialable!</label>
+					</div>
+				}
+			}
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	}

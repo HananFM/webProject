@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wep.Models;
 
@@ -11,9 +12,10 @@ using wep.Models;
 namespace wep.Migrations
 {
     [DbContext(typeof(ServisContext))]
-    partial class ServisContextModelSnapshot : ModelSnapshot
+    [Migration("20241210194823_KuaforSalonu3")]
+    partial class KuaforSalonu3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
