@@ -8,6 +8,7 @@ namespace wep.Models
         public DbSet<Servis> servis { get; set; }
         public DbSet<Employee> employee { get; set; }
         public DbSet<Rendezvou> rendezvou { get; set; }
+        public DbSet<User> user { get; set; }
 
 
 

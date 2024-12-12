@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using wep.Models;
 
 namespace wep.Controllers
@@ -8,12 +9,20 @@ namespace wep.Controllers
     public class ServisController : Controller
     {
         ServisContext _context = new ServisContext();
+       
+        //[HttpGet]
+        //public IIncludableQueryable<Servis,Employee> getServices()
+        //{
+        //    var data = _context.servis.Include(s => s.employee);
+        //    return data;
+        //}
 
         // GET: Kitaps
         public async Task<IActionResult> Index()
         {
-            var Context = _context.servis.Include(s => s.employee);
-            return View(await Context.ToListAsync());
+            var data = _context.servis.Include(s => s.employee);
+            //    return data;
+            return View(await data.ToListAsync());
         }
 
         // GET: Kitaps/Details/5

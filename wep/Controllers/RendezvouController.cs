@@ -15,6 +15,7 @@ namespace wep.Controllers
         }
         public IActionResult Create()
         {
+            ViewData["ServisID"] = new SelectList(dp.servis, "ServisID", "ServisName");
             return View();
         }
 
@@ -27,12 +28,23 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
+            Servis s = dp.servis.First(s => s.ServisID == rendezvou.ServisID); 
+            User u = dp.user.First(u => u.UserId == 1);
 
+            Rendezvou r = new Rendezvou()
+            {
+                ServisID = rendezvou.ServisID,
+                UserID = 1,
+                RandezvouTime = rendezvou.RandezvouTime,
+                RandezvouDate = rendezvou.RandezvouDate,
+                Servis = s,
+                user = u
+            };
             if (ModelState.IsValid)
             {
-                dp.rendezvou.Add(rendezvou);
+                dp.rendezvou.Add(r);
                 dp.SaveChanges();
-                TempData["msj"] = rendezvou.RendezvouID + "Rendezvou Başarıyla oluşturuldu.";
+                TempData["msj"] = r.RendezvouID + "Rendezvou Başarıyla oluşturuldu.";
                 return RedirectToAction("Index");
             }
 

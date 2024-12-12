@@ -14,7 +14,10 @@ namespace wep.Models
             ,new TimeOnly(18,0)
         };
         public int RendezvouID { get; set; }
-        public DateTime RandezvouTime { get; set; }
+        public int ServisID { get; set; }
+        public int UserID { get; set; }
+        public DateOnly RandezvouDate { get; set; }
+        public TimeOnly RandezvouTime{ get; set; }
         public Servis Servis { get; set; }
         public User user { get; set; }
 
