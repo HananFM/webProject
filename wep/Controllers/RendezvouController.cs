@@ -9,9 +9,10 @@ namespace wep.Controllers
     {
         ServisContext dp = new ServisContext();
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var data = dp.rendezvou.Include(r => r.servis).Include(r => r.user);
+            return View(await data.ToListAsync());
         }
         public IActionResult Create()
         {
@@ -21,32 +22,47 @@ namespace wep.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Rendezvou rendezvou)
+        public IActionResult Create([Bind("RandezvouTime,ServisID")]  Rendezvou rendezvou)
         {
             if (rendezvou == null)
             {
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            Servis s = dp.servis.First(s => s.ServisID == rendezvou.ServisID); 
+            Servis s = dp.servis.First(s => s.ServisID == rendezvou.ServisID);
             User u = dp.user.First(u => u.UserId == 1);
-
-            Rendezvou r = new Rendezvou()
+            if (s == null)
             {
-                ServisID = rendezvou.ServisID,
-                UserID = 1,
-                RandezvouTime = rendezvou.RandezvouTime,
-                RandezvouDate = rendezvou.RandezvouDate,
-                Servis = s,
-                user = u
-            };
-            if (ModelState.IsValid)
-            {
-                dp.rendezvou.Add(r);
-                dp.SaveChanges();
-                TempData["msj"] = r.RendezvouID + "Rendezvou Başarıyla oluşturuldu.";
+                TempData["msj"] ="Servis not available!";
                 return RedirectToAction("Index");
             }
+
+            if (u == null)
+            {
+                TempData["msj"] = "invalid User!";
+                return RedirectToAction("Index");
+            }
+            DateTime selectedTime = DateTime.Now;
+            if (!DateTime.TryParse(Request.Form["Time"].ToString(),out selectedTime))
+            {
+                TempData["msj"] = "invalid Time!";
+                return RedirectToAction("Index");
+            }
+            
+            var customTime = new DateTime(rendezvou.RandezvouTime.Year, rendezvou.RandezvouTime.Month, rendezvou.RandezvouTime.Day, selectedTime.Hour, selectedTime.Minute, 0);
+            rendezvou.RandezvouTime = customTime;
+            rendezvou.UserID = 1;
+            rendezvou.user = u;
+            rendezvou.servis = s;
+
+            //toDo: chek later
+            //if (ModelState.IsValid)
+            //{
+                dp.rendezvou.Add(rendezvou);
+                dp.SaveChanges();
+                TempData["msj"] = rendezvou.RendezvouID + " Rendezvou Başarıyla oluşturuldu.";
+                return RedirectToAction("Index");
+            //}
 
             TempData["msj"] = "Veri oluşturulurken bir hata oluştu.";
             return RedirectToAction("Index");
@@ -64,16 +80,16 @@ namespace wep.Controllers
                 TempData["msj"] = "Randevu Bulunmadı";
                 return RedirectToAction("Index");
             }
-            var kayit = dp.rendezvou.Include(x => x.servis).Where(x => x.RendezvouID == id).ToList();
-            if (kayit[0].servis.Count > 0)
-            {
-                TempData["msj"] = " ";
-                return RedirectToAction("Index");
+            //var kayit = dp.rendezvou.Include(x => x.servis).Where(x => x.RendezvouID == id).ToList();
+            //if (kayit[0].servis.Count > 0)
+            //{
+            //    TempData["msj"] = " ";
+            //    return RedirectToAction("Index");
 
-            }
+            //}
             dp.rendezvou.Remove(rendezvou);
             dp.SaveChanges();
-            TempData["msj"] = rendezvou.RendezvouID + "Randevou silindi";
+            TempData["msj"] = rendezvou.RendezvouID + " Randevou silindi";
             return RedirectToAction("Index");
         }
 
@@ -84,7 +100,7 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var rendezvou = dp.rendezvou.Include(x => x.servis).First(x => x.RendezvouID == id);
+            var rendezvou = dp.rendezvou.First(x => x.RendezvouID == id);
 
             if (rendezvou is null)
             {
@@ -128,10 +144,10 @@ namespace wep.Controllers
             {
                 dp.rendezvou.Update(R);
                 dp.SaveChanges();
-                TempData["msj"] = R.RendezvouID + "Günceleme yapıldı";
+                TempData["msj"] = R.RendezvouID + " Günceleme yapıldı";
                 return RedirectToAction("Index");
             }
-            TempData["msj"] = R.RendezvouID + "Günceleme işleme başarsiz";
+            TempData["msj"] = R.RendezvouID + " Günceleme işleme başarsiz";
             return RedirectToAction("Index");
 
         }

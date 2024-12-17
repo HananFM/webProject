@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
@@ -13,15 +14,18 @@ namespace wep.Models
             ,new TimeOnly(17,0)
             ,new TimeOnly(18,0)
         };
+        [Key]
         public int RendezvouID { get; set; }
+        [Required]
         public int ServisID { get; set; }
+ 
         public int UserID { get; set; }
-        public DateOnly RandezvouDate { get; set; }
-        public TimeOnly RandezvouTime{ get; set; }
-        public Servis Servis { get; set; }
-        public User user { get; set; }
+        [Required]
+        public DateTime RandezvouTime { get; set; }     
+        
+        public virtual Servis servis { get; set; }
 
-        public ICollection<Servis>? servis { get; set; }
+        public virtual User user { get; set; }
 
     }
 }

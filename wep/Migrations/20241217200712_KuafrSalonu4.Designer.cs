@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wep.Models;
 
@@ -11,9 +12,10 @@ using wep.Models;
 namespace wep.Migrations
 {
     [DbContext(typeof(ServisContext))]
-    partial class ServisContextModelSnapshot : ModelSnapshot
+    [Migration("20241217200712_KuafrSalonu4")]
+    partial class KuafrSalonu4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,10 +74,6 @@ namespace wep.Migrations
 
                     b.HasKey("RendezvouID");
 
-                    b.HasIndex("ServisID");
-
-                    b.HasIndex("UserID");
-
                     b.ToTable("rendezvou");
                 });
 
@@ -128,25 +126,6 @@ namespace wep.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("user");
-                });
-
-            modelBuilder.Entity("wep.Models.Rendezvou", b =>
-                {
-                    b.HasOne("wep.Models.Servis", "servis")
-                        .WithMany()
-                        .HasForeignKey("ServisID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("wep.Models.User", "user")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("servis");
-
-                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("wep.Models.Servis", b =>

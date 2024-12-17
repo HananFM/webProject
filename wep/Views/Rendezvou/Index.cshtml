@@ -5,7 +5,7 @@
 }
 
 <h1>Index</h1>
-
+<div class="alert-danger"> @TempData["msj"]</div>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -15,15 +15,26 @@
             <th>
                 @Html.DisplayNameFor(model => model.RandezvouTime)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.servis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.user)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@if (Model != null){ 
-    @foreach (var item in Model) {
+@foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.RandezvouTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.servis.ServisName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.user.UserName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.RendezvouID">Edit</a> |
@@ -31,7 +42,7 @@
                 <a asp-action="Delete" asp-route-id="@item.RendezvouID">Delete</a>
             </td>
         </tr>
-    }
 }
+
     </tbody>
 </table>

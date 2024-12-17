@@ -7,6 +7,7 @@
         public string UserName { get; set; }
         public string UserEmail { get; set; }
         public string UserPassword { get; set; }
+        public virtual ICollection<Rendezvou>? rendezvous { get; set; }
 
     }
 }
