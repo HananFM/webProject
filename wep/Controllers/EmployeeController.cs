@@ -6,11 +6,11 @@ namespace wep.Controllers
 {
     public class EmployeeController : Controller
     {
-        ServisContext dp = new ServisContext();
+        ServisContext _context = new ServisContext();
 
         public IActionResult Index()
         {
-            var employee = dp.employee.ToList();
+            var employee = _context.employee.ToList();
             return View(employee);
         }
         public IActionResult EmployeeAdd()
@@ -21,8 +21,8 @@ namespace wep.Controllers
         {
             if (ModelState.IsValid)
             {
-                dp.employee.Add(E);
-                dp.SaveChanges();
+                _context.employee.Add(E);
+                _context.SaveChanges();
                 TempData["msj"] = E.EmployeeName + " adlı Çalışan eklendi";
                 return RedirectToAction("Index");
             }
@@ -30,33 +30,51 @@ namespace wep.Controllers
             return RedirectToAction("EmployeeEkle");
         }
 
-        public IActionResult EmployeeDelete(int? id)
+        public async Task<IActionResult> EmployeeDelete(int? id)
         {
-            if (id is null)
+            if (id == null || _context.employee == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _context.employee
+                .Include(e => e.servis)
+                .FirstOrDefaultAsync(s => s.EmployeeID == id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int EmployeeID)
+        {
+            if (_context.employee == null)
             {
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var employee = dp.employee.Find(id);
+            var employee = await _context.employee.Include(e => e.servis).FirstOrDefaultAsync(e => e.EmployeeID == EmployeeID);
             if (employee is null)
             {
                 TempData["msj"] = "Çalışan Bulunmadı";
                 return RedirectToAction("Index");
             }
-            var kayit = dp.employee.Include(x => x.servis).Where(x => x.EmployeeID == id).ToList();
-            if (kayit[0].servis.Count > 0)
+
+            if (employee.servis?.Count > 0)
             {
                 TempData["msj"] = "Çalışan ait Servis var,once Servisleri siliniz";
                 return RedirectToAction("Index");
 
             }
-            dp.employee.Remove(employee);
-            dp.SaveChanges();
+            _context.employee.Remove(employee);
+            _context.SaveChanges();
             TempData["msj"] = employee.EmployeeName + "Adli çalışan silindi";
             return RedirectToAction("Index");
         }
-
-
 
         public IActionResult EmployeeDetails(int? id)
         {
@@ -65,7 +83,7 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var employee = dp.employee.Include(x => x.servis).First(x => x.EmployeeID == id);
+            var employee = _context.employee.Include(x => x.servis).First(x => x.EmployeeID == id);
 
             if (employee is null)
             {
@@ -83,7 +101,7 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var employee = dp.employee.Find(id);
+            var employee = _context.employee.Find(id);
             if (employee is null)
             {
                 TempData["msj"] = "ID ler eşleşmiyor";
@@ -107,8 +125,8 @@ namespace wep.Controllers
             }
             if (ModelState.IsValid)
             {
-                dp.employee.Update(E);
-                dp.SaveChanges();
+                _context.employee.Update(E);
+                _context.SaveChanges();
                 TempData["msj"] = E.EmployeeName + "Adli çalışan günceleme yapıldı";
                 return RedirectToAction("Index");
             }

@@ -1,0 +1,55 @@
+﻿@model wep.Models.Employee
+
+@{
+    ViewData["Title"] = "EmployeeDetails";
+}
+
+<h1>EmployeeDetails</h1>
+
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EmployeeName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EmployeeSurname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EmployeeSurname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EmployeeExperience)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EmployeeExperience)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.workingHours)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.workingHours)
+        </dd>
+    
+    @if(Model.servis?.Count > 0)
+    {
+        <dd class="col-sm-10 fw-bolder">
+            Services:
+        </dd>
+        <ol>
+            @foreach (var servis in Model.servis)
+            {
+                <li>@servis.ServisName</li>                
+            }
+        </ol>
+    }
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.EmployeeID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

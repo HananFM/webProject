@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Drawing;
 using wep.Models;
 
 namespace wep.Controllers
@@ -9,7 +10,7 @@ namespace wep.Controllers
     public class ServisController : Controller
     {
         ServisContext _context = new ServisContext();
-       
+
         //[HttpGet]
         //public IIncludableQueryable<Servis,Employee> getServices()
         //{
@@ -35,6 +36,8 @@ namespace wep.Controllers
 
             var Servis = await _context.servis
                 .Include(s => s.employee)
+                .Include(s => s.rendezvous)
+                .ThenInclude(r => r.user)
                 .FirstOrDefaultAsync(m => m.ServisID == id);
             if (Servis == null)
             {
@@ -52,16 +55,36 @@ namespace wep.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ServisID,ServisAdi,EmployeeID")] Servis Servis )
+        public async Task<IActionResult> Create([Bind("ServisID,ServisName,ServisFee,EmployeeID")] Servis Servis)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(Servis);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Output model state errors to the console or log
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
+                // Ensure ViewData is populated for the dropdown list
+                ViewData["EmployeeID"] = new SelectList(_context.employee, "EmployeeID", "EmployeeIDAd", Servis.EmployeeID);
+                return View(Servis);
             }
-            ViewData["EmployeeID"] = new SelectList(_context.employee, "EmployeeID", "EmployeeIDAd", Servis.EmployeeID);
-            return View(Servis);
+
+            // Now you know ModelState is valid, you can proceed
+            var employee = await _context.employee.FirstOrDefaultAsync(e => e.EmployeeID == Servis.EmployeeID);
+
+            if (employee == null)
+            {
+                ModelState.AddModelError("ServisID", "The selected employee does not exist.");
+                ViewData["EmployeeID"] = new SelectList(_context.employee, "EmployeeID", "EmployeeIDAd", Servis.EmployeeID);
+                return View(Servis);
+            }
+
+            Servis.employee = employee;
+
+            _context.Add(Servis);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -85,7 +108,7 @@ namespace wep.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServisID,ServisName,EmployeeID")] Servis Servis )
+        public async Task<IActionResult> Edit(int id, [Bind("ServisID,ServisName,ServisFee,EmployeeID")] Servis Servis)
         {
             if (id != Servis.ServisID)
             {
@@ -124,15 +147,17 @@ namespace wep.Controllers
                 return NotFound();
             }
 
-            var Servis = await _context.servis
-                .Include(s => s.employee)
+            var servis = await _context.servis
+                .Include(s => s.employee) 
+                .Include(s => s.rendezvous)
                 .FirstOrDefaultAsync(s => s.ServisID == id);
-            if (Servis == null)
+            if (servis == null)
             {
                 return NotFound();
             }
 
-            return View(Servis);
+
+            return View(servis);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -144,11 +169,18 @@ namespace wep.Controllers
                 return Problem("Entity set 'ServisContext.Servis'  is null.");
             }
             var servis = await _context.servis.FindAsync(id);
-            if (servis != null)
+            if (servis == null)
             {
-                _context.servis.Remove(servis);
+                TempData["msj"] = "Çalışan Bulunmadı";
+                return RedirectToAction("Index");
             }
 
+            if (servis.rendezvous?.Count > 0)
+            {
+                TempData["msj"] = "Çalışan ait Servis var,once Servisleri siliniz";
+                return RedirectToAction("Index");
+            }
+            _context.servis.Remove(servis);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
