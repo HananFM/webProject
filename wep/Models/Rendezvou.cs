@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
@@ -21,10 +22,15 @@ namespace wep.Models
  
         public int UserID { get; set; }
         [Required]
-        public DateTime RandezvouTime { get; set; }     
-        
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm tt}")]
+        public DateTime RandezvouTime { get; set; }
+        [Required]
+        [ForeignKey("ServisID")]
+        [ValidateNever]//Avoid validating
         public virtual Servis servis { get; set; }
-
+        [Required]
+        [ForeignKey("UserID")]
+        [ValidateNever]//Avoid validating
         public virtual User user { get; set; }
 
     }

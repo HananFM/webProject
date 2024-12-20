@@ -7,65 +7,69 @@ namespace wep.Controllers
 {
     public class RendezvouController : Controller
     {
-        ServisContext dp = new ServisContext();
+        ServisContext _context = new ServisContext();
 
         public async Task<IActionResult> Index()
         {
-            var data = dp.rendezvou.Include(r => r.servis).Include(r => r.user);
+            var data = _context.rendezvou.Include(r => r.servis).Include(r => r.user);
             return View(await data.ToListAsync());
         }
         public IActionResult Create()
         {
-            ViewData["ServisID"] = new SelectList(dp.servis, "ServisID", "ServisName");
+            ViewData["ServisID"] = new SelectList(_context.servis, "ServisID", "ServisName");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("RandezvouTime,ServisID")]  Rendezvou rendezvou)
+        public async Task<IActionResult> Create([Bind("RandezvouTime,ServisID")]  Rendezvou rendezvou)
         {
-            if (rendezvou == null)
+            if (!ModelState.IsValid)
             {
-                TempData["msj"] = "Lütfen dataları düzgün girin";
-                return RedirectToAction("Index");
-            }
-            Servis s = dp.servis.First(s => s.ServisID == rendezvou.ServisID);
-            User u = dp.user.First(u => u.UserId == 1);
-            if (s == null)
-            {
-                TempData["msj"] ="Servis not available!";
+                // Output model state errors to the console or log
+                string msg = "";
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    msg += error.ErrorMessage + "\n";
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
+                TempData["msj"] = "invalid model state,\n"+msg;
                 return RedirectToAction("Index");
             }
 
-            if (u == null)
+            // Now you know ModelState is valid, you can proceed
+            var servis = await _context.servis.FirstOrDefaultAsync(s => s.ServisID == rendezvou.ServisID);
+            var user = await _context.user.FirstOrDefaultAsync(s => s.UserId == 1);
+
+            if (servis == null)
             {
-                TempData["msj"] = "invalid User!";
+                TempData["msj"] = "invalid ServisID!";
                 return RedirectToAction("Index");
             }
+            
+            if(user == null)
+            {
+                TempData["msj"] = "invalid userID!";
+                return RedirectToAction("Index");
+            }
+
             DateTime selectedTime = DateTime.Now;
-            if (!DateTime.TryParse(Request.Form["Time"].ToString(),out selectedTime))
+            if (!DateTime.TryParse(Request.Form["Time"].ToString(), out selectedTime))
             {
                 TempData["msj"] = "invalid Time!";
                 return RedirectToAction("Index");
             }
-            
+
             var customTime = new DateTime(rendezvou.RandezvouTime.Year, rendezvou.RandezvouTime.Month, rendezvou.RandezvouTime.Day, selectedTime.Hour, selectedTime.Minute, 0);
             rendezvou.RandezvouTime = customTime;
-            rendezvou.UserID = 1;
-            rendezvou.user = u;
-            rendezvou.servis = s;
+            rendezvou.servis = servis;
+            rendezvou.user = user;
 
-            //toDo: chek later
-            //if (ModelState.IsValid)
-            //{
-                dp.rendezvou.Add(rendezvou);
-                dp.SaveChanges();
-                TempData["msj"] = rendezvou.RendezvouID + " Rendezvou Başarıyla oluşturuldu.";
-                return RedirectToAction("Index");
-            //}
+            _context.Add(rendezvou);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
 
-            TempData["msj"] = "Veri oluşturulurken bir hata oluştu.";
-            return RedirectToAction("Index");
         }
         public IActionResult Delete(int? id)
         {
@@ -74,7 +78,7 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var rendezvou = dp.rendezvou.Find(id);
+            var rendezvou = _context.rendezvou.Find(id);
             if (rendezvou is null)
             {
                 TempData["msj"] = "Randevu Bulunmadı";
@@ -87,8 +91,8 @@ namespace wep.Controllers
             //    return RedirectToAction("Index");
 
             //}
-            dp.rendezvou.Remove(rendezvou);
-            dp.SaveChanges();
+            _context.rendezvou.Remove(rendezvou);
+            _context.SaveChanges();
             TempData["msj"] = rendezvou.RendezvouID + " Randevou silindi";
             return RedirectToAction("Index");
         }
@@ -100,13 +104,14 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var rendezvou = dp.rendezvou.First(x => x.RendezvouID == id);
+            var rendezvou = _context.rendezvou.Include(r => r.servis).Include(r => r.user).FirstOrDefault(x => x.RendezvouID == id);
 
             if (rendezvou is null)
             {
                 TempData["msj"] = "Rendezvou Bulunmadi";
                 return RedirectToAction("Index");
             }
+                        
             return View(rendezvou);
 
         }
@@ -118,12 +123,13 @@ namespace wep.Controllers
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var Rendezvou = dp.rendezvou.Find(id);
+            var Rendezvou = _context.rendezvou.Find(id);
             if (Rendezvou is null)
             {
                 TempData["msj"] = "ID ler eşleşmiyor";
                 return RedirectToAction("Index");
             }
+            ViewData["ServisID"] = new SelectList(_context.servis, "ServisID", "ServisName", Rendezvou.ServisID);
             return View(Rendezvou);
         }
 
@@ -140,10 +146,11 @@ namespace wep.Controllers
                 TempData["msj"] = "ID ler eşleşmiyor";
                 return RedirectToAction("Index");
             }
+            R.UserID = 1;
             if (ModelState.IsValid)
             {
-                dp.rendezvou.Update(R);
-                dp.SaveChanges();
+                _context.rendezvou.Update(R);
+                _context.SaveChanges();
                 TempData["msj"] = R.RendezvouID + " Günceleme yapıldı";
                 return RedirectToAction("Index");
             }

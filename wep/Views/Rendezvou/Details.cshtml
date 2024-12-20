@@ -1,10 +1,10 @@
 ﻿@model wep.Models.Rendezvou
 
 @{
-    ViewData["Title"] = "RendezvouDetails";
+    ViewData["Title"] = "Details";
 }
 
-<h1>RendezvouDetails</h1>
+<h1>Details</h1>
 
 <div>
     <h4>Rendezvou</h4>
@@ -15,6 +15,18 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.RandezvouTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.servis)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.servis.ServisName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.user.UserId)
         </dd>
     </dl>
 </div>

@@ -24,14 +24,6 @@
 					<div class="form-group">
 						<label asp-for="ServisID" class="control-label"></label>
 						<select asp-for="ServisID" class="form-control" asp-items="ViewBag.ServisID"></select>
-
-						@*<label for="servis">Select a servis:</label>
-				<select id="services" name="services">
-				@foreach (var s in services)
-				{
-				<option value="@s.ServisID">@s.ServisName</option>
-				}
-				</select>*@
 					</div>
 					<label for="servis">Select a Time:</label>
 					<div class="form-check form-check-inline">
@@ -62,8 +54,6 @@
 	<a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-	}
+@section Scripts{
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
