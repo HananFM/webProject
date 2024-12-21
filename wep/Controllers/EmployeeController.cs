@@ -6,7 +6,13 @@ namespace wep.Controllers
 {
     public class EmployeeController : Controller
     {
-        ServisContext _context = new ServisContext();
+        private readonly ServisContext _context;
+
+        // Constructor with dependency injection
+        public EmployeeController(ServisContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult Index()
         {

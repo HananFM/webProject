@@ -9,7 +9,13 @@ namespace wep.Controllers
 {
     public class ServisController : Controller
     {
-        ServisContext _context = new ServisContext();
+        private readonly ServisContext _context;
+
+        // Constructor with dependency injection
+        public ServisController(ServisContext context)
+        {
+            _context = context;
+        }
 
         //[HttpGet]
         //public IIncludableQueryable<Servis,Employee> getServices()

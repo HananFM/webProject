@@ -7,7 +7,13 @@ namespace wep.Controllers
 {
     public class RendezvouController : Controller
     {
-        ServisContext _context = new ServisContext();
+        private readonly ServisContext _context;
+
+        // Constructor with dependency injection
+        public RendezvouController(ServisContext context)
+        {
+            _context = context;
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -16,7 +22,8 @@ namespace wep.Controllers
         }
         public IActionResult Create()
         {
-            ViewData["ServisID"] = new SelectList(_context.servis, "ServisID", "ServisName");
+            // Fetch the list of services and pass it to the view
+            ViewBag.ServisList = _context.servis.ToList();
             return View();
         }
 
@@ -118,20 +125,24 @@ namespace wep.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if (id is null)
+            if (id == null)
             {
                 TempData["msj"] = "Lütfen dataları düzgün girin";
                 return RedirectToAction("Index");
             }
-            var Rendezvou = _context.rendezvou.Find(id);
-            if (Rendezvou is null)
+
+            var rendezvou = _context.rendezvou.Find(id);
+            if (rendezvou == null)
             {
                 TempData["msj"] = "ID ler eşleşmiyor";
                 return RedirectToAction("Index");
             }
-            ViewData["ServisID"] = new SelectList(_context.servis, "ServisID", "ServisName", Rendezvou.ServisID);
-            return View(Rendezvou);
+
+            ViewData["ServisID"] = new SelectList(_context.servis, "ServisID", "ServisName", rendezvou.ServisID);
+            ViewBag.Services = _context.servis.ToList(); // Pass the services to the view
+            return View(rendezvou);
         }
+
 
         [HttpPost]
         public IActionResult Edit(int? id, Rendezvou R)
