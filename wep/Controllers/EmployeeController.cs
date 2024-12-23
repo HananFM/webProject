@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using wep.Models;
 
@@ -35,7 +36,7 @@ namespace wep.Controllers
             TempData["msj"] = "Lütfen Dataları düzgün giriniz";
             return RedirectToAction("EmployeeEkle");
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EmployeeDelete(int? id)
         {
             if (id == null || _context.employee == null)
@@ -56,6 +57,7 @@ namespace wep.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int EmployeeID)
         {
             if (_context.employee == null)
@@ -99,7 +101,7 @@ namespace wep.Controllers
             return View(employee);
 
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult EmployeeEdit(int? id)
         {
             if (id is null)
@@ -115,7 +117,7 @@ namespace wep.Controllers
             }
             return View(employee);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult EmployeeEdit(int? id, Employee E)
         {
