@@ -20,10 +20,12 @@ namespace wep.Controllers
             var employee = _context.employee.ToList();
             return View(employee);
         }
+        [Authorize(Roles = "admin")]
         public IActionResult EmployeeAdd()
         {
             return View();
         }
+
         public IActionResult EmployeeSave(Employee E)
         {
             if (ModelState.IsValid)
@@ -36,7 +38,7 @@ namespace wep.Controllers
             TempData["msj"] = "Lütfen Dataları düzgün giriniz";
             return RedirectToAction("EmployeeEkle");
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EmployeeDelete(int? id)
         {
             if (id == null || _context.employee == null)
@@ -57,7 +59,7 @@ namespace wep.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int EmployeeID)
         {
             if (_context.employee == null)
@@ -101,7 +103,7 @@ namespace wep.Controllers
             return View(employee);
 
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult EmployeeEdit(int? id)
         {
             if (id is null)
@@ -117,7 +119,7 @@ namespace wep.Controllers
             }
             return View(employee);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult EmployeeEdit(int? id, Employee E)
         {

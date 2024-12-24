@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -52,7 +53,7 @@ namespace wep.Controllers
 
             return View(Servis);
         }
-
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             ViewData["EmployeeID"] = new SelectList(_context.employee, "EmployeeID", "EmployeeName");
@@ -92,7 +93,7 @@ namespace wep.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.servis == null)
@@ -114,6 +115,7 @@ namespace wep.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ServisID,ServisName,ServisFee,EmployeeID")] Servis Servis)
         {
             if (id != Servis.ServisID)
@@ -146,6 +148,7 @@ namespace wep.Controllers
         }
 
         // GET: Kitaps/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.servis == null)
@@ -165,6 +168,7 @@ namespace wep.Controllers
 
             return View(servis);
         }
+        [Authorize(Roles = "admin")]
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

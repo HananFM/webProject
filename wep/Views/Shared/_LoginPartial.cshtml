@@ -7,10 +7,25 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+        var roles = await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User));
+        string displayRole = "User"; // Varsayılan değer
+
+        if (roles.Contains("admin"))
+        {
+            displayRole = "Admin";
+        }
+        else if (roles.Contains("employee"))
+        {
+            displayRole = "Employee";
+        }
+        else if (roles.Contains("client"))
+        {
+            displayRole = "Client";
+        }
 
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                User
+                @displayRole
             </a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a></li>
