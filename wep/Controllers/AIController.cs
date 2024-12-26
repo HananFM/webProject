@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace wep.Controllers
 {
+    [Authorize]
+
     public class AIController : Controller
     {
         private const string ApiUrl = "https://api.lightxeditor.com/external/api/v1/hairstyle";

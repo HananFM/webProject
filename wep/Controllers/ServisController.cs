@@ -8,7 +8,8 @@ using wep.Models;
 
 namespace wep.Controllers
 {
-    
+    [Authorize]
+
     public class ServisController : Controller
     {
         private readonly ServisContext _context;

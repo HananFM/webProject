@@ -5,7 +5,8 @@ using wep.Models;
 
 namespace wep.Controllers
 {
-    
+    [Authorize]
+
     public class EmployeeController : Controller
     {
         private readonly ServisContext _context;
