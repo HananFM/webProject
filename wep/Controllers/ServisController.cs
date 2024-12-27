@@ -8,6 +8,7 @@ using wep.Models;
 
 namespace wep.Controllers
 {
+    
     public class ServisController : Controller
     {
         private readonly ServisContext _context;
@@ -34,6 +35,7 @@ namespace wep.Controllers
         }
 
         // GET: Kitaps/Details/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.servis == null)
@@ -62,6 +64,8 @@ namespace wep.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
+
         public async Task<IActionResult> Create([Bind("ServisID,ServisName,ServisFee,EmployeeID")] Servis Servis)
         {
             if (!ModelState.IsValid)
@@ -157,7 +161,7 @@ namespace wep.Controllers
             }
 
             var servis = await _context.servis
-                .Include(s => s.employee) 
+                .Include(s => s.employee)
                 .Include(s => s.rendezvous)
                 .FirstOrDefaultAsync(s => s.ServisID == id);
             if (servis == null)
@@ -168,10 +172,10 @@ namespace wep.Controllers
 
             return View(servis);
         }
-        [Authorize(Roles = "admin")]
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.servis == null)

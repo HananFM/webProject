@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddJsonOptions( options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
-builder.Services.AddDbContext<ServisContext>(options=>
+builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+builder.Services.AddDbContext<ServisContext>(options =>
 {
     var connectoinString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(connectoinString);
@@ -16,7 +16,9 @@ builder.Services.AddDbContext<ServisContext>(options=>
 builder.Services.AddDefaultIdentity<UserDetails>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ServisContext>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -46,9 +48,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication();
 
 app.UseAuthorization();
+
+// Seed the database with initial data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ServisContext>();
+    var manager = services.GetRequiredService<UserManager<UserDetails>>();
+
+    // Initialize and seed data
+    await ServisContext.Initialize(services, context, manager);
+}
 
 app.MapControllerRoute(
     name: "default",

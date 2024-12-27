@@ -28,6 +28,8 @@ namespace wep.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserAd = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserSoyad = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -47,38 +49,7 @@ namespace wep.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "employee",
-                columns: table => new
-                {
-                    EmployeeID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    EmployeeSurname = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    EmployeeExperience = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    workingHours = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_employee", x => x.EmployeeID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "user",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_user", x => x.UserId);
-                });
-
+            
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
@@ -125,8 +96,8 @@ namespace wep.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -170,8 +141,8 @@ namespace wep.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -183,6 +154,22 @@ namespace wep.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "employee",
+                columns: table => new
+                {
+                    EmployeeID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    EmployeeSurname = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    EmployeeExperience = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    workingHours = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_employee", x => x.EmployeeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,25 +200,40 @@ namespace wep.Migrations
                     RendezvouID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ServisID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RandezvouTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_rendezvou", x => x.RendezvouID);
                     table.ForeignKey(
+                        name: "FK_rendezvou_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_rendezvou_servis_ServisID",
                         column: x => x.ServisID,
                         principalTable: "servis",
                         principalColumn: "ServisID",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_rendezvou_user_UserID",
-                        column: x => x.UserID,
-                        principalTable: "user",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "22c01966-c7d7-48a1-8583-c697b9c5aef2", "be13fd4e-5c38-47ba-82e0-32998f735dde", "client", "client" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "b8584f54-e6e5-44b1-8360-53e131a3b673", "4bf2c936-2585-4917-a44c-6771fffb9d32", "admin", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "da9461f0-69f7-463e-83d7-7fc383b79acd", "40b25c0f-f28d-469c-9213-3b571450799d", "employee", "employee" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -316,9 +318,6 @@ namespace wep.Migrations
 
             migrationBuilder.DropTable(
                 name: "servis");
-
-            migrationBuilder.DropTable(
-                name: "user");
 
             migrationBuilder.DropTable(
                 name: "employee");

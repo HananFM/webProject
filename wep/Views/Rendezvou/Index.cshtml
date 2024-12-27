@@ -25,24 +25,34 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RandezvouTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.servis.ServisName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.user.UserName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RendezvouID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RendezvouID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RendezvouID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RandezvouTime)
+                </td>
+                @if (User.IsInRole("admin"))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.servis.ServisName) with: @Html.DisplayFor(modelItem => item.servis.employee.EmployeeName) @Html.DisplayFor(modelItem => item.servis.employee.EmployeeSurname)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.servis.ServisName)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.UserAd) @Html.DisplayFor(modelItem => item.user.UserSoyad)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.RendezvouID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.RendezvouID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.RendezvouID">Delete</a>
+                </td>
+            </tr>
+        }
 
     </tbody>
 </table>

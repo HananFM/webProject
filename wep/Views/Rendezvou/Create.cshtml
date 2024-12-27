@@ -6,7 +6,7 @@
 
 <h1>RendezvouCreate</h1>
 
-<h4>Rendezvou</h4>
+<div class="alert-danger"> @TempData["msj"]</div>
 <hr />
 <div class="row">
     <div class="col-md-8">
@@ -32,8 +32,9 @@
                 <div class="form-check form-check-inline">
                     @foreach (var time in wep.Models.Rendezvou.timing)
                     {
+                        bool isSelected = Model != null && time.Hour == Model.RandezvouTime.Hour && time.Minute == Model.RandezvouTime.Minute;
                         <div class="form-check-inline" style="margin-right:30px;">
-                            <input class="form-check-input" type="radio" id="@time" name="time" value="@time" required />
+                            <input class="form-check-input" type="radio" id="@time" name="time" value="@time" (@isSelected?checked:unchecked) required />
                             <label class="form-check-label" for="time">@time</label>
                         </div>
                     }

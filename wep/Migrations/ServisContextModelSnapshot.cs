@@ -51,22 +51,22 @@ namespace wep.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e36f47ca-41c8-4a06-91b8-234f06500207",
-                            ConcurrencyStamp = "d3365133-020d-4b0c-b0db-e042dbb3d9bc",
+                            Id = "b8584f54-e6e5-44b1-8360-53e131a3b673",
+                            ConcurrencyStamp = "4bf2c936-2585-4917-a44c-6771fffb9d32",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
-                            Id = "f9193730-0938-41a8-abf2-36999130b55b",
-                            ConcurrencyStamp = "750413d4-f8ba-42e1-92b7-3a4ae4ea25d9",
+                            Id = "22c01966-c7d7-48a1-8583-c697b9c5aef2",
+                            ConcurrencyStamp = "be13fd4e-5c38-47ba-82e0-32998f735dde",
                             Name = "client",
                             NormalizedName = "client"
                         },
                         new
                         {
-                            Id = "aace3aec-62a7-4140-b05b-f7f0ecf5bd59",
-                            ConcurrencyStamp = "b6b8e004-bba7-4078-b352-040145415e03",
+                            Id = "da9461f0-69f7-463e-83d7-7fc383b79acd",
+                            ConcurrencyStamp = "40b25c0f-f28d-469c-9213-3b571450799d",
                             Name = "employee",
                             NormalizedName = "employee"
                         });
@@ -125,10 +125,12 @@ namespace wep.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -165,10 +167,12 @@ namespace wep.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -223,8 +227,9 @@ namespace wep.Migrations
                     b.Property<int>("ServisID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("RendezvouID");
 
@@ -259,31 +264,6 @@ namespace wep.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.ToTable("servis");
-                });
-
-            modelBuilder.Entity("wep.Models.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
-
-                    b.Property<string>("UserEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("user");
                 });
 
             modelBuilder.Entity("wep.Models.UserDetails", b =>
@@ -418,8 +398,8 @@ namespace wep.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("wep.Models.User", "user")
-                        .WithMany("rendezvous")
+                    b.HasOne("wep.Models.UserDetails", "user")
+                        .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -446,11 +426,6 @@ namespace wep.Migrations
                 });
 
             modelBuilder.Entity("wep.Models.Servis", b =>
-                {
-                    b.Navigation("rendezvous");
-                });
-
-            modelBuilder.Entity("wep.Models.User", b =>
                 {
                     b.Navigation("rendezvous");
                 });

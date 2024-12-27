@@ -6,9 +6,12 @@
 
 <h1>Index</h1>
 <div class="alert-danger"> @TempData["msj"]</div>
-<p>
-	<a asp-action="EmployeeAdd">Create New</a>
-</p>
+@if (User.IsInRole("admin"))
+{
+	<p>
+		<a asp-action="EmployeeAdd">Create New</a>
+	</p>
+}
 <table class="table">
 	<thead>
 		<tr>
@@ -24,7 +27,10 @@
 			<th>
 				@Html.DisplayNameFor(model => model.workingHours)
 			</th>
-			<th></th>
+			@if (User.IsInRole("admin"))
+			{
+				<th></th>
+			}
 		</tr>
 	</thead>
 	<tbody>
@@ -43,11 +49,14 @@
 				<td>
 					@Html.DisplayFor(modelItem => item.workingHours)
 				</td>
-				<td>
-					<a asp-action="EmployeeEdit" asp-route-id="@item.EmployeeID">Edit</a> |
-					<a asp-action="EmployeeDetails" asp-route-id="@item.EmployeeID">Details</a> |
-					<a asp-action="EmployeeDelete" asp-route-id="@item.EmployeeID">Delete</a>
-				</td>
+				@if (User.IsInRole("admin"))
+				{
+					<td>
+						<a asp-action="EmployeeEdit" asp-route-id="@item.EmployeeID">Edit</a> |
+						<a asp-action="EmployeeDetails" asp-route-id="@item.EmployeeID">Details</a> |
+						<a asp-action="EmployeeDelete" asp-route-id="@item.EmployeeID">Delete</a>
+					</td>
+				}
 			</tr>
 		}
 	</tbody>

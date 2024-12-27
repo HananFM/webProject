@@ -3,6 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace wep.Models
 {
@@ -19,8 +20,9 @@ namespace wep.Models
         public int RendezvouID { get; set; }
         [Required]
         public int ServisID { get; set; }
- 
-        public int UserID { get; set; }
+        [ValidateNever]//Avoid validating
+        public string UserID { get; set; }
+
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm tt}")]
         public DateTime RandezvouTime { get; set; }
@@ -31,7 +33,7 @@ namespace wep.Models
         [Required]
         [ForeignKey("UserID")]
         [ValidateNever]//Avoid validating
-        public virtual User user { get; set; }
+        public virtual UserDetails user { get; set; }
 
     }
 }

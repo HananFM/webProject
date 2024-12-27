@@ -5,6 +5,7 @@ using wep.Models;
 
 namespace wep.Controllers
 {
+    
     public class EmployeeController : Controller
     {
         private readonly ServisContext _context;
@@ -20,12 +21,13 @@ namespace wep.Controllers
             var employee = _context.employee.ToList();
             return View(employee);
         }
+
         [Authorize(Roles = "admin")]
         public IActionResult EmployeeAdd()
         {
             return View();
         }
-
+        [Authorize(Roles = "admin")]
         public IActionResult EmployeeSave(Employee E)
         {
             if (ModelState.IsValid)
@@ -56,10 +58,9 @@ namespace wep.Controllers
 
             return View(employee);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int EmployeeID)
         {
             if (_context.employee == null)
@@ -85,7 +86,7 @@ namespace wep.Controllers
             TempData["msj"] = employee.EmployeeName + "Adli çalışan silindi";
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "admin")]
         public IActionResult EmployeeDetails(int? id)
         {
             if (id is null)
@@ -119,7 +120,7 @@ namespace wep.Controllers
             }
             return View(employee);
         }
-        [Authorize(Roles = "admin")]
+
         [HttpPost]
         public IActionResult EmployeeEdit(int? id, Employee E)
         {
