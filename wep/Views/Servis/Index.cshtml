@@ -22,6 +22,9 @@
 				@Html.DisplayNameFor(model => model.ServisFee)
 			</th>
 			<th>
+				@Html.DisplayNameFor(model => model.ServisDuration)
+			</th>
+			<th>
 				@Html.DisplayNameFor(model => model.employee)
 			</th>
 			@if (User.IsInRole("admin"))
@@ -39,6 +42,9 @@
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.ServisFee)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ServisDuration)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.employee.EmployeeName)

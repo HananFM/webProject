@@ -58,14 +58,14 @@ namespace wep.Models
                 if (!context.servis.Any())
                 {
                     context.servis.AddRange(
-                        new Servis { ServisName = "Saç Kesmi", ServisFee = 1000, EmployeeID = 1 },//1
-                        new Servis { ServisName = "Cılt Bakım", ServisFee = 650, EmployeeID = 2 },//2
-                        new Servis { ServisName = "Pedükir", ServisFee = 700, EmployeeID = 3 },//3
-                        new Servis { ServisName = "Makyaj", ServisFee = 700, EmployeeID = 4 },//4
-                        new Servis { ServisName = "Manükir", ServisFee = 750, EmployeeID = 5 },//5
-                        new Servis { ServisName = "Saç Boyama", ServisFee = 1200, EmployeeID = 6 },//6
-                        new Servis { ServisName = "Saç Fönleme", ServisFee = 1000, EmployeeID = 7 },//7
-                        new Servis { ServisName = "Saç Dalgalama", ServisFee = 1000, EmployeeID = 8 }//8
+                        new Servis { ServisName = "Saç Kesmi", ServisFee = 1000, ServisDuration="45 Dk", EmployeeID = 1 },//1
+                        new Servis { ServisName = "Cılt Bakım", ServisFee = 650, ServisDuration = "90 Dk", EmployeeID = 2 },//2
+                        new Servis { ServisName = "Pedükir", ServisFee = 700, ServisDuration = "120 Dk", EmployeeID = 3 },//3
+                        new Servis { ServisName = "Makyaj", ServisFee = 700, ServisDuration = "60 Dk", EmployeeID = 4 },//4
+                        new Servis { ServisName = "Manükir", ServisFee = 750, ServisDuration = "90 Dk", EmployeeID = 5 },//5
+                        new Servis { ServisName = "Saç Boyama", ServisFee = 1200, ServisDuration = "180 Dk", EmployeeID = 6 },//6
+                        new Servis { ServisName = "Saç Fönleme", ServisFee = 1000, ServisDuration = "60 Dk", EmployeeID = 7 },//7
+                        new Servis { ServisName = "Saç Dalgalama", ServisFee = 1000, ServisDuration = "60 Dk", EmployeeID = 8 }//8
                     );
                     context.SaveChanges();
                 }

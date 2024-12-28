@@ -20,7 +20,7 @@
             @Html.DisplayNameFor(model => model.servis)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.servis.ServisName) with: @Html.DisplayFor(model => model.servis.employee.EmployeeName) @Html.DisplayFor(model => model.servis.employee.EmployeeSurname)
+            @Html.DisplayFor(model => model.servis.ServisName), Süre: @Html.DisplayFor(model => model.servis.ServisDuration). with: @Html.DisplayFor(model => model.servis.employee.EmployeeName) @Html.DisplayFor(model => model.servis.employee.EmployeeSurname)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.user)

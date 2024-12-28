@@ -18,6 +18,8 @@ namespace wep.Models
         [Display(Name = "Servis Ücreti")]
         [Range(0, int.MaxValue, ErrorMessage = "Please enter a value bigger than {0}")]
         public int ServisFee { get; set; }
+        [Display(Name = "Servis Süre")]
+        public string ServisDuration { get; set; }
         [Required]
         public int EmployeeID { get; set; }
         [ForeignKey("EmployeeID")]
