@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Result";
+    var resultUrl = ViewData["ResultUrl"] as string;
+    var originalUrl = ViewData["OriginalUrl"] as string;
+}
+
+<h2>AI-Generated Hairstyle</h2>
+@if (!string.IsNullOrEmpty(originalUrl))
+{
+    <img src="@originalUrl" alt="Original Hairstyle" class="img-fluid" />
+}
+<br />
+<br />
+@if (!string.IsNullOrEmpty(resultUrl))
+{
+    <img src="@resultUrl" alt="Generated Hairstyle" class="img-fluid" />
+}
+

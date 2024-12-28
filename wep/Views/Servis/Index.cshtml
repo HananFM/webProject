@@ -1,20 +1,20 @@
 ﻿@model IEnumerable<wep.Models.Servis>
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Servises";
 }
 
-<h1>Index</h1>
+<h1>Servises</h1>
 <div class="alert-danger"> @TempData["msj"]</div>
 @if (User.IsInRole("admin"))
 {
 	<p>
-		<a asp-action="Create">Create New</a>
+		<a class="btn btn-secondary" asp-action="Create">Create New</a>
 	</p>
 }
 <table class="table">
 	<thead>
-		<tr>
+		<tr class="table-light">
 			<th>
 				@Html.DisplayNameFor(model => model.ServisName)
 			</th>
@@ -33,7 +33,7 @@
 	<tbody>
 		@foreach (var item in Model)
 		{
-			<tr>
+			<tr class="table-secondary">
 				<td>
 					@Html.DisplayFor(modelItem => item.ServisName)
 				</td>
@@ -46,9 +46,9 @@
 				@if (User.IsInRole("admin"))
 				{
 					<td>
-						<a asp-action="Edit" asp-route-id="@item.ServisID">Edit</a> |
-						<a asp-action="Details" asp-route-id="@item.ServisID">Details</a> |
-						<a asp-action="Delete" asp-route-id="@item.ServisID">Delete</a>
+						<a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ServisID">Edit</a> |
+						<a class="btn btn-info" asp-action="Details" asp-route-id="@item.ServisID">Details</a> |
+						<a class="btn btn-warning" asp-action="Delete" asp-route-id="@item.ServisID">Delete</a>
 					</td>
 				}
 			</tr>
